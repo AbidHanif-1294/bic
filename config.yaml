@@ -1,0 +1,44 @@
+# Konfigurasi eksperimen
+experiment:
+  subject_id: "A"
+  model_name: "Model_A"
+  seed: 42
+
+data:
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  file_format: "edf"          # format file EEG: edf, fif, set
+  sfreq: 256                  # target sampling frequency (Hz)
+  lowcut: 1.0                 # high-pass filter (Hz)
+  highcut: 45.0               # low-pass filter (Hz)
+  notch_freq: 50.0            # notch filter (Hz) - 50 untuk Indonesia/Eropa, 60 untuk US
+  window_sec: 2.0             # panjang window (detik)
+  stride_sec: 0.5             # langkah sliding window (detik)
+  channels: null              # null = semua channel, atau list nama channel
+
+model:
+  input_dim: 64               # jumlah channel EEG (akan dioverride otomatis)
+  hidden_dim: 128
+  latent_dim: 32
+  num_layers: 2
+  dropout: 0.2
+  # Dynamic neural system parameters
+  tau: 0.1                    # time constant untuk recurrent dynamics
+  dt: 0.02                    # integration step
+
+training:
+  batch_size: 32
+  epochs: 100
+  learning_rate: 0.001
+  weight_decay: 0.00001
+  grad_clip: 1.0
+  train_split: 0.7
+  val_split: 0.15
+  test_split: 0.15
+  early_stopping_patience: 15
+  device: "auto"              # auto, cpu, cuda
+
+evaluation:
+  metrics: ["mse", "mae", "correlation", "psd_distance"]
+  save_plots: true
+  output_dir: "results"
